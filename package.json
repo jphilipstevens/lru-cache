@@ -7,6 +7,9 @@
   "author": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "engine": {
+    "node": "14.x"
+  },
   "scripts": {
     "compile": "tsc",
     "prebuild": "npm run test",
@@ -14,7 +17,7 @@
     "clean": "rm -rf ./node_modules/.cache && rm -rf ./lib ./coverage",
     "lint": "tslint -t verbose -c ./tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint --fix -t verbose -c ./tslint.json 'src/**/*.ts'",
-    "test": "jest",
+    "test": "npm run test:spec",
     "test:spec": "jest",
     "test:integration": "jest --config=./jest.integration.config.js",
     "commit": "npx git-cz",
