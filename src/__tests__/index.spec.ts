@@ -1,13 +1,10 @@
-import { add } from "../";
+import createLRUCache from "../index";
 
-test("it should add two numbers", () => {
-  const result = add(1, 1);
 
-  expect(result).toBe(2);
-});
+describe("the exported modules for public consumption", () => {
+    it("should export the create function for default", () => {
+        const createLRUCacheModule = require("../LRUCache").default;
 
-test("it should add two negative numbers", () => {
-  const result = add(1, -1);
-
-  expect(result).toBe(0);
+        expect(createLRUCache).toEqual(createLRUCacheModule);
+    });
 });

@@ -1,13 +1,7 @@
 import Exception from "./Exception";
 
-export interface LRUCache<K, V> {
-  get(key: K): V | undefined;
-  put(key: K, value: V): void;
-  del(key: K): void;
-  reset(): void;
-}
 
-class LRUCache implements LRUCache<K, V> {
+class LRUCache<K extends string | Symbol | number, V> {
   public readonly maxSize: number;
   private readonly cache: Map<K, V>;
 
@@ -17,7 +11,7 @@ class LRUCache implements LRUCache<K, V> {
   }
 
   get(key: K): V | undefined {
-    const value = this.cache.get(key);
+    const value = this.cache.get(key) as V;
     if (this.cache.has(key)) {
       this.cache.delete(key);
       this.cache.set(key, value);
@@ -42,7 +36,7 @@ class LRUCache implements LRUCache<K, V> {
   }
 }
 
-export default <K, V>(size: number): LRUCache<K, V> => {
+export default <K extends string | Symbol | number, V>(size: number): LRUCache<K, V> => {
   if (size <= 0) {
     const error = new Exception(
       "INVALID_CACHE_SIZE",
