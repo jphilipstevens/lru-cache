@@ -29,11 +29,12 @@ jobs:
       run: npm ci
     - name: run build
       run: npm run build --if-present
-    - name: Jest Reporter
+    - name: Jest Test Report (${{ matrix.version }})
       uses: tanmen/jest-reporter@v1.1
       if: always()
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}      
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        action-name: Jest Test Report (${{ matrix.version }})      
     - name: Code Coverage Report
       uses: romeovs/lcov-reporter-action@v0.2.11
       with:
