@@ -201,7 +201,7 @@ describe("data type tests", () => {
     dataType: "string"
   },
   {
-    create: () => Math.floor(Math.random() * 100 + 100),
+    create: () => Math.floor(Math.random() * 100 + 101),
     dataType: "number"
   },
   {

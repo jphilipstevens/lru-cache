@@ -63,3 +63,5 @@ typings/
 lib/
 
 junit.xml
+
+result.json
