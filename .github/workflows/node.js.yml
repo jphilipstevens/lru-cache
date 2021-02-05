@@ -38,7 +38,7 @@ jobs:
       if: always()
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        acton-name: Jest Test Report ${{ matrix.node-version }}
+        action-name: Jest Test Report ${{ matrix.node-version }}
 
     - name: Code Coverage Report
       uses: romeovs/lcov-reporter-action@v0.2.11
