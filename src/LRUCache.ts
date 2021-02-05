@@ -1,4 +1,6 @@
-interface LRUCache<K, V> {
+import Exception from "./Exception";
+
+export interface LRUCache<K, V> {
 
     get(key: K): V | undefined;
     put(key: K, value: V): boolean;
@@ -6,28 +8,46 @@ interface LRUCache<K, V> {
     reset(): void;
 }
 
-class LRUCache<K, V> implements LRUCache<K, V> {
-    private readonly size: number;
+class LRUCache implements LRUCache<K, V> {
+    public readonly maxSize: number;
+    private readonly cache: Map<K, V>;
 
     constructor(size: number) {
-        this.size = size;
+        this.maxSize = size;
+        this.cache = new Map<K, V>();
     }
 
     get(key: K): V | undefined {
-        // this updates the last touch of an entry
-        throw new Error("not implemented");
+        const value = this.cache.get(key);
+        if (this.cache.has(key)) {
+            this.cache.delete(key);
+            this.cache.set(key, value);
+        }
+        return value;
     }
 
     put(key: K, value: V): boolean {
-        // this updates the last touch of an entry
-        throw new Error("not implemented");
+        if (this.cache.size >= this.maxSize) {
+            const keyToDelete = this.cache.keys().next();
+            this.cache.delete(keyToDelete.value);
+        }
+        this.cache.set(key, value);
     }
 
     del(key: K): void {
-        throw new Error("not implemented");
+        this.cache.delete(key);
     }
 
     reset(): void {
-        throw new Error("not implemented");
+        this.cache.clear();
     }
 }
+
+export default <K, V>(size: number): LRUCache<K, V> => {
+    if (size <= 0) {
+        const error = new Exception("INVALID_CACHE_SIZE", "Invalid size. The cache needs to be greater than 0 in size");
+        throw error;
+    }
+
+    return new LRUCache<K, V>(size);
+};
