@@ -226,3 +226,25 @@ describe("data type tests", () => {
     });
   });
 });
+
+describe("long running tests", () => {
+
+  it(`should long running tests`, () => {
+    const cacheSize = 1000;
+    const cache = createLRUCache<number, string>(cacheSize);
+    const vals: Array<{ key: number, value: string }> = [];
+    for (let i = 0; i < 1000000; i++) {
+      const entry = {
+        key: i,
+        value: v4()
+      };
+      vals.push(entry);
+      cache.put(entry.key, entry.value);
+    }
+
+    for(var i = 0; i < 100; i++) {
+      const valsIndex = vals.length - i - 1;
+      expect(cache.get(vals[valsIndex].key)).toBe(vals[valsIndex].value);
+    }
+  });
+});
