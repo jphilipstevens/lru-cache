@@ -20,11 +20,18 @@ class LRUCache<K extends string | Symbol | number, V> {
   }
 
   put(key: K, value: V): void {
+
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+      this.cache.set(key, value);
+      return;
+    }
     if (this.cache.size >= this.maxSize) {
       const keyToDelete = this.cache.keys().next();
       this.cache.delete(keyToDelete.value);
     }
     this.cache.set(key, value);
+
   }
 
   del(key: K): void {

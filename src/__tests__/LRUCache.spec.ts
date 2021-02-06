@@ -73,6 +73,45 @@ describe("put", () => {
     expect(cache.get(desiredValueToTest.key)).toBe(desiredValueToTest.value);
     expect(result).toBe(desiredValueToTest.value);
   });
+
+  it("it should replace a value when full", () => {
+    const cacheSize = Math.floor(2);
+    const cache = createLRUCache<string, string>(cacheSize);
+
+    const entry1 = {
+      key: v4(),
+      value: v4(),
+    };
+
+    const entry2 = {
+      key: v4(),
+      value: v4(),
+    };
+
+    const updatedEntry2 = {
+      key: entry2.key,
+      value: v4(),
+    };
+
+
+    cache.put(
+      entry1.key,
+      entry1.value
+    );
+
+    cache.put(
+      entry2.key,
+      entry2.value
+    );
+
+    cache.put(
+      updatedEntry2.key,
+      updatedEntry2.value
+    );
+
+    expect(cache.get(entry1.key)).toBe(entry1.value);
+    expect(cache.get(entry2.key)).toBe(updatedEntry2.value);
+  });
 });
 
 describe("delete", () => {
@@ -221,7 +260,7 @@ describe("data type tests", () => {
         };
         cache.put(entry.key, entry.value);
         cache.put(keyTest.create(), valueTest.create());
-        expect(cache.get(entry.key)).toBe(entry.value);
+        expect(cache.get(entry.key)).toEqual(entry.value);
       });
     });
   });
