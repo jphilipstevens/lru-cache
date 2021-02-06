@@ -52,13 +52,16 @@ describe("get", () => {
       desiredValueToTest.key,
       desiredValueToTest.value
     );
+
     expect(cache.get(initialValue.key)).toBe(initialValue.value);
     expect(cache.get(desiredValueToTest.key)).toBe(desiredValueToTest.value);
+
+    throw new Error("needs work");
   });
 });
 
 describe("put", () => {
-  it("it should allow adding a value to an empty cache", () => {
+  it("it should allow adding a value", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
     const cache = createLRUCache<string, string>(cacheSize);
     const desiredValueToTest = {
@@ -74,7 +77,34 @@ describe("put", () => {
     expect(result).toBe(desiredValueToTest.value);
   });
 
-  it("it should replace a value when full", () => {
+  it("it should replace the value of a current key", () => {
+    const cacheSize = Math.floor(2);
+    const cache = createLRUCache<string, string>(cacheSize);
+
+    const entry1 = {
+      key: v4(),
+      value: v4(),
+    };
+
+    const entry2 = {
+      key: entry1.key,
+      value: v4(),
+    };
+
+    cache.put(
+      entry1.key,
+      entry1.value
+    );
+
+    cache.put(
+      entry2.key,
+      entry2.value
+    );
+
+    expect(cache.get(entry1.key)).toBe(entry2.value);
+  });
+
+  it("it should replace the value of a current key when full", () => {
     const cacheSize = Math.floor(2);
     const cache = createLRUCache<string, string>(cacheSize);
 
