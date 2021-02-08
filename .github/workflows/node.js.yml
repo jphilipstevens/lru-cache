@@ -31,7 +31,10 @@ jobs:
       run: npm ci
 
     - name: run build
-      run: npm run build --if-present
+      run: npm run build
+
+    - name: run Integration Tests
+      run: npm run test:integration
 
     - name: Jest Test Report ${{ matrix.node-version }}
       uses: tanmen/jest-reporter@v1.1

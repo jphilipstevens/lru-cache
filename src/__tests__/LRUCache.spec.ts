@@ -1,14 +1,14 @@
 import { v4 } from "uuid";
 import Exception from "../Exception";
-import createLRUCache from "../LRUCache";
+import LRUCache from "../LRUCache";
 
-describe("createLRUCache", () => {
+describe("new LRUCache", () => {
   it("should not allow 0 as a cache size", () => {
     const expectedErrorShape = new Exception(
       "INVALID_CACHE_SIZE",
       "Invalid size. The cache needs to be greater than 0 in size"
     );
-    expect(() => createLRUCache(0)).toThrowError(expectedErrorShape);
+    expect(() => new LRUCache(0)).toThrowError(expectedErrorShape);
   });
 
   it("should not allow negative numbers as a cache size", () => {
@@ -17,12 +17,12 @@ describe("createLRUCache", () => {
       "INVALID_CACHE_SIZE",
       "Invalid size. The cache needs to be greater than 0 in size"
     );
-    expect(() => createLRUCache(cacheSize)).toThrowError(expectedErrorShape);
+    expect(() => new LRUCache(cacheSize)).toThrowError(expectedErrorShape);
   });
 
   it("should allow a positive cache size", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
-    const cache = createLRUCache(cacheSize);
+    const cache = new LRUCache(cacheSize);
     expect(cache.maxSize).toBe(cacheSize);
   });
 });
@@ -30,56 +30,46 @@ describe("createLRUCache", () => {
 describe("get", () => {
   it("should return undefined for an empty cache", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
     const result = cache.get(v4());
     expect(result).toBe(undefined);
   });
 
-  it("should return undefined if the cache key is empty", () => {
+  it("should return undefined if there is a cache miss", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 2);
-    const cache = createLRUCache<string, string>(cacheSize);
-    const initialValue = {
+    const cache = new LRUCache<string, string>(cacheSize);
+
+    const entry = {
       key: v4(),
       value: v4(),
     };
-    cache.put(initialValue.key, initialValue.value);
+    cache.put(entry.key, entry.value);
 
-    const desiredValueToTest = {
-      key: v4(),
-      value: v4(),
-    };
-    cache.put(
-      desiredValueToTest.key,
-      desiredValueToTest.value
-    );
-
-    expect(cache.get(initialValue.key)).toBe(initialValue.value);
-    expect(cache.get(desiredValueToTest.key)).toBe(desiredValueToTest.value);
-
-    throw new Error("needs work");
+    expect(cache.get(entry.key)).toBe(entry.value);
+    expect(cache.get(v4())).toBe(undefined);
   });
+
 });
 
 describe("put", () => {
   it("it should allow adding a value", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
-    const cache = createLRUCache<string, string>(cacheSize);
-    const desiredValueToTest = {
+    const cache = new LRUCache<string, string>(cacheSize);
+    const entry = {
       key: v4(),
       value: v4(),
     };
     cache.put(
-      desiredValueToTest.key,
-      desiredValueToTest.value
+      entry.key,
+      entry.value
     );
-    const result = cache.get(desiredValueToTest.key);
-    expect(cache.get(desiredValueToTest.key)).toBe(desiredValueToTest.value);
-    expect(result).toBe(desiredValueToTest.value);
+    const result = cache.get(entry.key);
+    expect(result).toBe(entry.value);
   });
 
   it("it should replace the value of a current key", () => {
     const cacheSize = Math.floor(2);
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
 
     const entry1 = {
       key: v4(),
@@ -106,7 +96,7 @@ describe("put", () => {
 
   it("it should replace the value of a current key when full", () => {
     const cacheSize = Math.floor(2);
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
 
     const entry1 = {
       key: v4(),
@@ -147,21 +137,21 @@ describe("put", () => {
 describe("delete", () => {
   it("should be a no-op for deleting from an empty cache", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
 
     expect(() => cache.del(v4())).not.toThrowError;
   });
 
   it("should be a no-op for deleting a key that is not in the cache", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
     cache.put(v4(), v4());
     expect(() => cache.del(v4())).not.toThrowError;
   });
 
   it("should delete a saved value", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
     const entry = {
       key: v4(),
       value: v4()
@@ -176,14 +166,14 @@ describe("delete", () => {
 describe("reset", () => {
   it("should be a no-op for resetting from an empty cache", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
 
     expect(() => cache.reset()).not.toThrowError;
   });
 
   it("should reset and remove from an empty array", () => {
     const cacheSize = Math.floor(Math.random() * 100 + 1);
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
     const entry = {
       key: v4(),
       value: v4()
@@ -197,7 +187,7 @@ describe("reset", () => {
 describe("Least Recently Used caching strategy", () => {
   it("should remove the oldest value", () => {
     const cacheSize = 2;
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
     const entriesToAdd = [
       {
         key: v4(),
@@ -221,10 +211,10 @@ describe("Least Recently Used caching strategy", () => {
     expect(cache.get(entriesToAdd[1].key)).toBe(entriesToAdd[1].value);
     expect(cache.get(entriesToAdd[2].key)).toBe(entriesToAdd[2].value);
   });
-
-  it("should remove the oldest value accessed", () => {
+  
+  it("getting a value resets a cached entry to be used recently", () => {
     const cacheSize = 2;
-    const cache = createLRUCache<string, string>(cacheSize);
+    const cache = new LRUCache<string, string>(cacheSize);
     const entriesToAdd = [
       {
         key: v4(),
@@ -249,15 +239,16 @@ describe("Least Recently Used caching strategy", () => {
     expect(cache.get(entriesToAdd[1].key)).toBeUndefined;
     expect(cache.get(entriesToAdd[2].key)).toBe(entriesToAdd[2].value);
   });
+
 });
 
-describe("data type tests", () => {
+describe("Data Type tests for keys to assure the cache key comparisons are correct", () => {
   const keyTests = [{
     create: () => v4(),
     dataType: "string"
   },
   {
-    create: () => Math.floor(Math.random() * 100 + 1),
+    create: () => Math.floor(Math.random() * 100000000 + 1),
     dataType: "number"
   },
   {
@@ -276,6 +267,18 @@ describe("data type tests", () => {
   {
     create: () => Symbol(),
     dataType: "Symbol"
+  },
+  {
+    create: () => null,
+    dataType: "null"
+  },
+  {
+    create: () => undefined,
+    dataType: "undefined"
+  },
+  {
+    create: () => ({ [v4()]: v4() }),
+    dataType: "object"
   }];
 
 
@@ -283,37 +286,22 @@ describe("data type tests", () => {
     valueTests.forEach(valueTest => {
       it(`should accept a cache key of ${keyTest.dataType} data type and value of ${valueTest.dataType} data type `, () => {
         const cacheSize = 2;
-        const cache = createLRUCache(cacheSize);
-        const entry = {
+        const cache = new LRUCache(cacheSize);
+        const entry1 = {
           key: keyTest.create(),
           value: valueTest.create()
         };
-        cache.put(entry.key, entry.value);
-        cache.put(keyTest.create(), valueTest.create());
-        expect(cache.get(entry.key)).toEqual(entry.value);
+
+        const entry2 = {
+          key: keyTest.create(),
+          value: valueTest.create()
+        };
+
+        cache.put(entry1.key, entry1.value);
+        cache.put(entry2.key, entry2.value);
+        expect(cache.get(entry1.key)).toEqual(entry1.value);
+        expect(cache.get(entry2.key)).toEqual(entry2.value);
       });
     });
-  });
-});
-
-describe("long running tests", () => {
-
-  it(`should long running tests`, () => {
-    const cacheSize = 1000;
-    const cache = createLRUCache<number, string>(cacheSize);
-    const vals: Array<{ key: number, value: string }> = [];
-    for (let i = 0; i < 1000000; i++) {
-      const entry = {
-        key: i,
-        value: v4()
-      };
-      vals.push(entry);
-      cache.put(entry.key, entry.value);
-    }
-
-    for(var i = 0; i < 100; i++) {
-      const valsIndex = vals.length - i - 1;
-      expect(cache.get(vals[valsIndex].key)).toBe(vals[valsIndex].value);
-    }
   });
 });
