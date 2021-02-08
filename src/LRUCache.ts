@@ -1,7 +1,6 @@
 import Exception from "./Exception";
 
-
-export default class LRUCache<K extends string | Symbol | number, V> {
+export default class LRUCache<K extends string | symbol | number, V> {
   public readonly maxSize: number;
   private readonly cache: Map<K, V>;
 
@@ -12,7 +11,7 @@ export default class LRUCache<K extends string | Symbol | number, V> {
         "Invalid size. The cache needs to be greater than 0 in size"
       );
       throw error;
-    }  
+    }
     this.maxSize = size;
     this.cache = new Map<K, V>();
   }
@@ -27,7 +26,6 @@ export default class LRUCache<K extends string | Symbol | number, V> {
   }
 
   put(key: K, value: V): void {
-
     if (this.cache.has(key)) {
       this.cache.delete(key);
       this.cache.set(key, value);
@@ -38,7 +36,6 @@ export default class LRUCache<K extends string | Symbol | number, V> {
       this.cache.delete(keyToDelete.value);
     }
     this.cache.set(key, value);
-
   }
 
   del(key: K): void {

@@ -48,7 +48,6 @@ describe("get", () => {
     expect(cache.get(entry.key)).toBe(entry.value);
     expect(cache.get(v4())).toBe(undefined);
   });
-
 });
 
 describe("put", () => {
@@ -59,10 +58,7 @@ describe("put", () => {
       key: v4(),
       value: v4(),
     };
-    cache.put(
-      entry.key,
-      entry.value
-    );
+    cache.put(entry.key, entry.value);
     const result = cache.get(entry.key);
     expect(result).toBe(entry.value);
   });
@@ -81,15 +77,9 @@ describe("put", () => {
       value: v4(),
     };
 
-    cache.put(
-      entry1.key,
-      entry1.value
-    );
+    cache.put(entry1.key, entry1.value);
 
-    cache.put(
-      entry2.key,
-      entry2.value
-    );
+    cache.put(entry2.key, entry2.value);
 
     expect(cache.get(entry1.key)).toBe(entry2.value);
   });
@@ -113,21 +103,11 @@ describe("put", () => {
       value: v4(),
     };
 
+    cache.put(entry1.key, entry1.value);
 
-    cache.put(
-      entry1.key,
-      entry1.value
-    );
+    cache.put(entry2.key, entry2.value);
 
-    cache.put(
-      entry2.key,
-      entry2.value
-    );
-
-    cache.put(
-      updatedEntry2.key,
-      updatedEntry2.value
-    );
+    cache.put(updatedEntry2.key, updatedEntry2.value);
 
     expect(cache.get(entry1.key)).toBe(entry1.value);
     expect(cache.get(entry2.key)).toBe(updatedEntry2.value);
@@ -154,14 +134,13 @@ describe("delete", () => {
     const cache = new LRUCache<string, string>(cacheSize);
     const entry = {
       key: v4(),
-      value: v4()
-    }
+      value: v4(),
+    };
     cache.put(entry.key, entry.value);
     cache.del(entry.key);
     expect(cache.get(entry.key)).toBeUndefined;
   });
 });
-
 
 describe("reset", () => {
   it("should be a no-op for resetting from an empty cache", () => {
@@ -176,8 +155,8 @@ describe("reset", () => {
     const cache = new LRUCache<string, string>(cacheSize);
     const entry = {
       key: v4(),
-      value: v4()
-    }
+      value: v4(),
+    };
     cache.put(entry.key, entry.value);
     cache.reset();
     expect(cache.get(entry.key)).toBeUndefined;
@@ -211,7 +190,7 @@ describe("Least Recently Used caching strategy", () => {
     expect(cache.get(entriesToAdd[1].key)).toBe(entriesToAdd[1].value);
     expect(cache.get(entriesToAdd[2].key)).toBe(entriesToAdd[2].value);
   });
-  
+
   it("getting a value resets a cached entry to be used recently", () => {
     const cacheSize = 2;
     const cache = new LRUCache<string, string>(cacheSize);
@@ -239,62 +218,64 @@ describe("Least Recently Used caching strategy", () => {
     expect(cache.get(entriesToAdd[1].key)).toBeUndefined;
     expect(cache.get(entriesToAdd[2].key)).toBe(entriesToAdd[2].value);
   });
-
 });
 
 describe("Data Type tests for keys to assure the cache key comparisons are correct", () => {
-  const keyTests = [{
-    create: () => v4(),
-    dataType: "string"
-  },
-  {
-    create: () => Math.floor(Math.random() * 100000000 + 1),
-    dataType: "number"
-  },
-  {
-    create: () => Symbol(),
-    dataType: "Symbol"
-  }];
+  const keyTests = [
+    {
+      create: () => v4(),
+      dataType: "string",
+    },
+    {
+      create: () => Math.floor(Math.random() * 100000000 + 1),
+      dataType: "number",
+    },
+    {
+      create: () => Symbol(),
+      dataType: "Symbol",
+    },
+  ];
 
-  const valueTests = [{
-    create: () => v4(),
-    dataType: "string"
-  },
-  {
-    create: () => Math.floor(Math.random() * 100 + 101),
-    dataType: "number"
-  },
-  {
-    create: () => Symbol(),
-    dataType: "Symbol"
-  },
-  {
-    create: () => null,
-    dataType: "null"
-  },
-  {
-    create: () => undefined,
-    dataType: "undefined"
-  },
-  {
-    create: () => ({ [v4()]: v4() }),
-    dataType: "object"
-  }];
+  const valueTests = [
+    {
+      create: () => v4(),
+      dataType: "string",
+    },
+    {
+      create: () => Math.floor(Math.random() * 100 + 101),
+      dataType: "number",
+    },
+    {
+      create: () => Symbol(),
+      dataType: "Symbol",
+    },
+    {
+      create: () => null,
+      dataType: "null",
+    },
+    {
+      create: () => undefined,
+      dataType: "undefined",
+    },
+    {
+      create: () => ({ [v4()]: v4() }),
+      dataType: "object",
+    },
+  ];
 
-
-  keyTests.forEach(keyTest => {
-    valueTests.forEach(valueTest => {
+  keyTests.forEach((keyTest) => {
+    valueTests.forEach((valueTest) => {
       it(`should accept a cache key of ${keyTest.dataType} data type and value of ${valueTest.dataType} data type `, () => {
         const cacheSize = 2;
         const cache = new LRUCache(cacheSize);
         const entry1 = {
           key: keyTest.create(),
-          value: valueTest.create()
+          value: valueTest.create(),
         };
 
         const entry2 = {
           key: keyTest.create(),
-          value: valueTest.create()
+          value: valueTest.create(),
         };
 
         cache.put(entry1.key, entry1.value);
