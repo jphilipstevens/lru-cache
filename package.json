@@ -62,6 +62,6 @@
     "url": "https://github.com/jphilipstevens/lru-cache.git"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }
