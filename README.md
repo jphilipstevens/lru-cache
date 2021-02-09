@@ -104,6 +104,11 @@ Static code analysis: ESLint
 CI/CD: GitHub Actions
 Releases: GitHub and Semantic Releases
 
+## Future Considerations
+
+1. Use ReadThedocs to build an online code documentation
+2. Improve dev setup with watching both src and tests to run the while build and test suite
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
