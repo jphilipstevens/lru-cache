@@ -44,6 +44,7 @@ jobs:
         action-name: Jest Test Report ${{ matrix.node-version }}
 
     - name: Code Coverage Report
+      if: github.event_name == 'pull_request'
       uses: romeovs/lcov-reporter-action@v0.2.11
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
