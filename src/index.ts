@@ -1,1 +1,2 @@
-export const add = (a: number, b: number): number => a + b;
+import createLRUCache from "./LRUCache";
+export default createLRUCache;

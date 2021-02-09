@@ -1,13 +1,10 @@
-import { add } from "../"
+import LRUCache from "../index";
 
-test("it should add two numbers", () => {
-    const result = add(1, 1);
+describe("the exported modules for public consumption", () => {
+  it("should export the create function for default", () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const LRUCacheModule = require("../LRUCache").default;
 
-    expect(result).toBe(2);
-});
-
-test("it should add two negative numbers", () => {
-    const result = add(1, -1);
-
-    expect(result).toBe(0);
+    expect(LRUCache).toEqual(LRUCacheModule);
+  });
 });
