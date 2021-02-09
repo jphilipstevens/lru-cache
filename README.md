@@ -108,6 +108,7 @@ Releases: GitHub and Semantic Releases
 
 1. Use ReadThedocs to build an online code documentation
 2. Improve dev setup with watching both src and tests to run the while build and test suite
+3. Implement full release to npm, or private repo
 
 ## Contributing
 
